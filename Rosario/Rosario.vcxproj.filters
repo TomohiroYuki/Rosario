@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{f7eb8f44-fd11-444f-9feb-32c623373701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source\System">
+      <UniqueIdentifier>{90f6c6c7-2641-4bc0-8fc1-7bd016d90dbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header\System">
+      <UniqueIdentifier>{d2b40962-8e71-4d51-ae63-c5be3eba5fee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Game">
+      <UniqueIdentifier>{9f46fb30-335e-45cd-8c5e-f8a43a47ee26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header\Game\Actors">
+      <UniqueIdentifier>{f69ae997-d80a-49ad-af7d-2239b67e8c94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Game\Camera">
+      <UniqueIdentifier>{b3813ebc-da7c-4432-90db-e1d469ec98b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Game\Scenes">
+      <UniqueIdentifier>{b93be3d0-5ae4-43ed-9b31-80b0bd35bbe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Math">
+      <UniqueIdentifier>{1a522514-fc88-4fc6-b249-6ed494c7a16d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>Source\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Game\Scene\SceneZero.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Game\Camera.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\input\Input.cpp">
+      <Filter>Source\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\sound\sound.cpp">
+      <Filter>Source\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\Object\3D\SkeltalMesh.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\Object\3D\StaticMesh.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Shader\Shader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Game\GameBrain.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\Object\3D\MeshBase2.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\math\yuki_math.cpp">
+      <Filter>Header\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Game\Actor\Pawn.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Game\Collision\Collision.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\System\Framework.h">
+      <Filter>Header\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\input\Input.h">
+      <Filter>Header\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\sound\sound.h">
+      <Filter>Header\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\GameBrain.h">
+      <Filter>Header\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\math\Vector2D.h">
+      <Filter>Header\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Utility.h">
+      <Filter>Header\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Object\3D\StaticMesh.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Object\3D\SkeltalMesh.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Object\3D\MeshBase.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\sound\dsound.h">
+      <Filter>Header\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Shader\Shader.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\ResourceManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\Characters\Yuppi.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\Actor\Actor.h">
+      <Filter>Header\Game\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\YQCamera.h">
+      <Filter>Header\Game\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\Scene\Scene.h">
+      <Filter>Header\Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\Scene\SceneZero.h">
+      <Filter>Header\Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\Actor\Pawn.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\Collision\Collision.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\Physics\RigidBody.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\math\yuki_math.h">
+      <Filter>Header\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Object\3D\WirePrimitive.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Object\3D\Brushes.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\math\Vector4.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Game\Actor\Ball.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Sources\Shader\GridPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Sources\Shader\GridVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Sources\Shader\MeshPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Sources\Shader\MeshVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Sources\Shader\shader.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Sources\Shader\Mesh.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>
