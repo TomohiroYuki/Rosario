@@ -12,6 +12,7 @@ float4 MeshPS(VS_OUT3D input) : SV_TARGET
     c.r += 0.6f;
     c.g += 0.6f;
     c.b += 0.6f;
+    
     c.a = 1;
 
     //return c;

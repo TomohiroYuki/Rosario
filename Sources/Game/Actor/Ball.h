@@ -22,13 +22,14 @@ class Ball :public Pawn
 {
 public:
 	Ball() :
-		Pawn("..\\Assets\\3D\\sphere.fbx", CollisionBase::COL_TYPE_SPHERE)
+		Pawn("..\\Assets\\3D\\ball.fbx", CollisionBase::COL_TYPE_SPHERE)
 	{
 
 		GetActorTransform().SetScale(BALL_PARAMS[0].r);
 		rigid_body->mass = BALL_PARAMS[0].mass;
 		rigid_body->restitution = BALL_PARAMS[0].restitution;
 		line = std::make_unique<LINE>();
+		
 	}
 
 	std::unique_ptr<LINE> line;

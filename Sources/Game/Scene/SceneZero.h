@@ -23,13 +23,14 @@ public:
 
 		std::dynamic_pointer_cast<PrimitiveBase>(box);
 		RESOURCEM->AddToResourceMap(std::string("BOX"), std::dynamic_pointer_cast<PrimitiveBase>(box));
-		//yuppi = std::make_unique<StaticMesh>("..\\Assets\\3D\\yuppi_wait.fbx");
+		//yuppi = std::make_unique<StaticMesh>("..\\Assets\\3D\\3d-model.fbx");
 		//yuppi_star = std::make_unique<Yuppi>();
 		//rigid=std::make_unique<RigidBody_Box>(std::dynamic_pointer_cast<Pawn>(std::make_shared<Yuppi>()),Vector(50.0f,100.0f,50.0f),0.01f);
 		//test_object = std::make_unique<TestObject>();
 		//rigid_sphere=std::make_unique<RigidBody_Sphere>(std::dynamic_pointer_cast<Pawn>(std::make_shared<Yuppi>()),50 ,1);
 		//test_object->SetParent(yuppi_star.get());
-		
+		catcher_view = std::make_unique<Yukitter::YQCamera>();
+
 	}
 	~SceneZero() {}
 private:
@@ -41,6 +42,7 @@ private:
 	std::unique_ptr<StaticMesh>				yuppi;
 	std::unique_ptr<Pawn>				cube;
 	std::unique_ptr<Ball>				sphere;
+	std::unique_ptr<Yukitter::YQCamera>			catcher_view;
 
 	std::vector<std::unique_ptr<Ball>> ball_list;
 	std::unique_ptr<Yukitter::ViewerCamera>	camera;
@@ -48,8 +50,11 @@ private:
 	std::shared_ptr<BOX>					box;
 public:
 	int balls=0;
-
+	bool camera_mode=false;
 	void Initialize();
+
+	void ChangeView();
+
 	void Tick(float dt)override;
 
 	void Render(float dt);

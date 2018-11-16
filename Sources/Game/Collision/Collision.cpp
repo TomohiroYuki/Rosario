@@ -1,6 +1,7 @@
 #include "Game\Actor\Actor.h"
 #include "Game\Physics\RigidBody.h"
 #include "Game\Collision\Collision.h"
+#include <vector>
 using namespace DirectX;
 using namespace Yukitter;
 
@@ -57,9 +58,25 @@ void CollisionBase::Collide(SphereCollision* sphere, BoxCollision* box)
 		OutputDebugString(s.c_str());*/
 
 	}
-
-
 }
+
+void CollisionBase::Collide(BoxCollision* box1, BoxCollision* box2)
+{
+	//Cross()
+	auto CalcSumOfProjectedVec = [&](const Vector& v, const Vector& forward, const Vector& right,const Vector& up)
+	{
+		return Dot(forward, v) + Dot(right, v) + Dot(up, v);
+	};
+
+	std::vector<Vector> v;
+	XMMATRIX mx = box1->actor_ref->GetActorRotationMatrix();
+	XMFLOAT4X4 m;
+	XMStoreFloat4x4(&m, mx);
+	Vector f(m._31, m._32, m._33), r(m._11, m._12, m._13), u(m._21, m._22, m._23);
+	float ra = CalcSumOfProjectedVec(box1->actor_ref->GetActorTransform().scale3d.x,f,r,u);
+	float rb = box1->box_extention.x;
+}
+
 
 bool Contact::Resolve()
 {
@@ -126,15 +143,20 @@ bool Contact::Resolve()
 	}
 	//imp = L"\nimpulse:: y:" + std::to_wstring(normal.y) + L" z:" + std::to_wstring(normal.z);
 	//OutputDebugString(imp.c_str());
-
+	float mu = 0.003f;
 	//aaa = impulse.Length();
+	Vector relative_velocity = objects[0]->rigid_ref->linear_velocity - objects[1]->rigid_ref->linear_velocity;
+	
+	Vector v = Cross(Cross(normal, relative_velocity.GetNormalize()),normal);
+	Vector friction_f = v * mu * j;
+	friction_f = 0;;
 	//OutputDebugStringW()
-	objects[0]->rigid_ref->linear_velocity += impulse * objects[0]->rigid_ref->GetInverseMass();
+	objects[0]->rigid_ref->linear_velocity += impulse * objects[0]->rigid_ref->GetInverseMass()- friction_f;
 	ta = Cross(ra, impulse);
 	ta = XMVector3TransformCoord(ta.ToXMVec(), objects[0]->rigid_ref->CalcInverseTransformedTensor());
 	objects[0]->rigid_ref->angular_velocity += ta;
 
-	objects[1]->rigid_ref->linear_velocity -= impulse * objects[1]->rigid_ref->GetInverseMass();
+	objects[1]->rigid_ref->linear_velocity -= impulse * objects[1]->rigid_ref->GetInverseMass() + friction_f;
 	tb = Cross(rb, impulse);
 	tb = XMVector3TransformCoord(tb.ToXMVec(), objects[1]->rigid_ref->CalcInverseTransformedTensor());
 	objects[1]->rigid_ref->angular_velocity -= tb;

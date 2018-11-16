@@ -704,7 +704,7 @@ void StaticMesh::Render(const DirectX::XMMATRIX& world_mat)
 
 
 	XMStoreFloat4x4(&wvp, world_mat*GameBrain::view_mat   * GameBrain::projection_mat);
-	XMStoreFloat4x4(&inverse, /*DirectX::XMMatrixTranspose*/(DirectX::XMMatrixInverse(0, world_mat)));
+	XMStoreFloat4x4(&inverse, world_mat /*DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(0, world_mat))*/);
 
 
 	for (auto& mesh : meshes)

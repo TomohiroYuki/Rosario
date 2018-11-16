@@ -58,6 +58,12 @@ public:
 		active_camera_reference = nullptr;
 		active_camera_reference = other_camera;
 	}
+	void BackToDefaultCamera()
+	{
+		active_camera_reference = nullptr;
+		active_camera_reference = default_camera.get();
+	}
+
 
 	static Vector GetActiveCameraLocation()
 	{

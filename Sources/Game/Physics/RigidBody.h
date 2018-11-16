@@ -72,11 +72,26 @@ public:
 		float rho = 1.293f*1000.0f;
 		float r = actor_ref->GetActorScale().x;
 		//AddForce();
-		Yukitter::Vector v = Cross(angular_velocity*-1, linear_velocity*-1).GetNormalize();
+		Yukitter::Vector v = Cross(angular_velocity*-1, linear_velocity*-1).GetNormalize()*(1.0f-Dot(angular_velocity.GetNormalize(),linear_velocity.GetNormalize()));
 		float f = (1.0f / 2.0f)*pi*rho*r*r*linear_velocity.Length()*angular_velocity.Length();
 		AddForce(v*f*0.1f);
 	}
 
+
+	void AddDragForce()
+	{
+		float r = actor_ref->GetActorScale().x;
+		float air_viscosity = 0.0181f*0.001f;
+		float drag_coefficient = 0.5f;
+		float rho = 1.293f*1000.0f;
+		float v_len = linear_velocity.Length();
+
+		auto a=linear_velocity* 6.0f*3.141592f*r*air_viscosity;
+		auto b= linear_velocity.GetNormalize()*v_len*v_len*rho*3.141592f*r*r*drag_coefficient / 2;
+		Yukitter::Vector f = a+b;
+	
+		AddForce(f*-1.0f);
+	}
 
 	void CalculatePhysicsBehaviour(float dt)
 	{
@@ -147,7 +162,7 @@ public:
 			Yukitter::Vector4 w(angular_velocity, 0);
 			//D3DXQUATERNION w(angular_velocity.x, angular_velocity.y, angular_velocity.z, 0);
 			w = Vector4(orientation) * w;
-			orientation += w * dt ;
+			orientation += w * dt*2.0f ;
 			//D3DXQuaternionNormalize(&orientation, &orientation);
 			orientation = orientation.GetNormalized();
 		}
