@@ -49,6 +49,8 @@ public:
 	
 
 
+	void CreateDummyTexture(ID3D11ShaderResourceView** dpsrv);
+
 
 
 	virtual void Render() {};

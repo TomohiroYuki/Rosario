@@ -1,6 +1,7 @@
 #include "Game\Actor\Actor.h"
 #include "Game\Physics\RigidBody.h"
 #include "Game\Collision\Collision.h"
+#include <vector>
 using namespace DirectX;
 using namespace Yukitter;
 
@@ -57,14 +58,76 @@ void CollisionBase::Collide(SphereCollision* sphere, BoxCollision* box)
 		OutputDebugString(s.c_str());*/
 
 	}
-
-
 }
+
+void CollisionBase::Collide(BoxCollision* box1, BoxCollision* box2)
+{
+	//Cross()
+	auto CalcSumOfProjectedVec = [&](const Vector& v, const Vector& forward, const Vector& right, const Vector& up)
+	{
+		return Dot(forward, v) + Dot(right, v) + Dot(up, v);
+	};
+
+	std::vector<Vector> v;
+	std::vector<float> extention;
+	XMMATRIX mx1 = box1->actor_ref->GetActorRotationMatrix();
+	XMFLOAT4X4 m1;
+	XMStoreFloat4x4(&m1, mx1);
+	XMMATRIX mx2 = box2->actor_ref->GetActorRotationMatrix();
+	XMFLOAT4X4 m2;
+	XMStoreFloat4x4(&m2, mx2);
+	Vector f1(m1._31, m1._32, m1._33), r1(m1._11, m1._12, m1._13), u1(m1._21, m1._22, m1._23);
+	Vector f2(m2._31, m2._32, m2._33), r2(m2._11, m2._12, m2._13), u2(m2._21, m2._22, m2._23);
+
+	v.emplace_back(f2);
+	v.emplace_back(r2);
+	v.emplace_back(u2);
+	extention.emplace_back(box2->box_extention.z);
+	extention.emplace_back(box2->box_extention.x);
+	extention.emplace_back(box2->box_extention.y);
+	int loop_count = 0;
+	for (auto& vec : v)
+	{
+		Vector scale = box1->actor_ref->GetActorTransform().scale3d;
+		Vector l = vec;
+		float ra = CalcSumOfProjectedVec(l, f1*scale.z, r1*scale.x, u1*scale.y);
+		float rb = extention[loop_count];
+
+		if (ra + rb > Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l)));
+		{
+
+		}
+		loop_count++;
+	}
+	v.clear();
+	extention.clear();
+	v.emplace_back(f1);
+	v.emplace_back(r1);
+	v.emplace_back(u1);
+	extention.emplace_back(box1->box_extention.z);
+	extention.emplace_back(box1->box_extention.x);
+	extention.emplace_back(box1->box_extention.y);
+	loop_count = 0;
+	for (auto& vec : v)
+	{
+		Vector scale = box2->actor_ref->GetActorTransform().scale3d;
+		Vector l = vec;
+		float ra = CalcSumOfProjectedVec(l, f2*scale.z, r2*scale.x, u2*scale.y);
+		float rb = extention[loop_count];
+
+		if (ra + rb > Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l)));
+		{
+
+		}
+		loop_count++;
+	}
+}
+
 
 bool Contact::Resolve()
 {
-	auto str0 = L"\nnormal:: x:" + std::to_wstring(normal.x) + L" y:" + std::to_wstring(normal.y) + L" z:" + std::to_wstring(normal.z)+ L"\n";
-	std::wstring w = std::to_wstring(penetration)+L"\n";
+	auto str0 = L"\nnormal:: x:" + std::to_wstring(normal.x) + L" y:" + std::to_wstring(normal.y) + L" z:" + std::to_wstring(normal.z) + L"\n";
+	std::wstring w = std::to_wstring(penetration) + L"\n";
 	//OutputDebugStringW(w.c_str());
 	float v_rel = 0;
 	static float aaa = 0;
@@ -78,7 +141,7 @@ bool Contact::Resolve()
 
 	v_rel = Dot(normal, (p_dot_a - p_dot_b));
 
-	
+
 
 	//•ªŽqŒvŽZ
 	float numerator = 0;
@@ -126,15 +189,20 @@ bool Contact::Resolve()
 	}
 	//imp = L"\nimpulse:: y:" + std::to_wstring(normal.y) + L" z:" + std::to_wstring(normal.z);
 	//OutputDebugString(imp.c_str());
-
+	float mu = 0.003f;
 	//aaa = impulse.Length();
+	Vector relative_velocity = objects[0]->rigid_ref->linear_velocity - objects[1]->rigid_ref->linear_velocity;
+
+	Vector v = Cross(Cross(normal, relative_velocity.GetNormalize()), normal);
+	Vector friction_f = v * mu * j;
+	friction_f = 0;;
 	//OutputDebugStringW()
-	objects[0]->rigid_ref->linear_velocity += impulse * objects[0]->rigid_ref->GetInverseMass();
+	objects[0]->rigid_ref->linear_velocity += impulse * objects[0]->rigid_ref->GetInverseMass() - friction_f;
 	ta = Cross(ra, impulse);
 	ta = XMVector3TransformCoord(ta.ToXMVec(), objects[0]->rigid_ref->CalcInverseTransformedTensor());
 	objects[0]->rigid_ref->angular_velocity += ta;
 
-	objects[1]->rigid_ref->linear_velocity -= impulse * objects[1]->rigid_ref->GetInverseMass();
+	objects[1]->rigid_ref->linear_velocity -= impulse * objects[1]->rigid_ref->GetInverseMass() + friction_f;
 	tb = Cross(rb, impulse);
 	tb = XMVector3TransformCoord(tb.ToXMVec(), objects[1]->rigid_ref->CalcInverseTransformedTensor());
 	objects[1]->rigid_ref->angular_velocity -= tb;

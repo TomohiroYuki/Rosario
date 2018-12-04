@@ -14,6 +14,45 @@
 #define _CRT_SECURE_NO_WARNINGS
 using namespace DirectX;
 
+void MeshBase::CreateDummyTexture(ID3D11ShaderResourceView** dpsrv)
+{
+
+
+	D3D11_TEXTURE2D_DESC texture2d_desc = {};
+	texture2d_desc.Width = 1;
+	texture2d_desc.Height = 1;
+	texture2d_desc.MipLevels = 1;
+	texture2d_desc.ArraySize = 1;
+	texture2d_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	texture2d_desc.SampleDesc.Count = 1;
+	texture2d_desc.SampleDesc.Quality = 0;
+	texture2d_desc.Usage = D3D11_USAGE_DEFAULT;
+	texture2d_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	texture2d_desc.CPUAccessFlags = 0;
+	texture2d_desc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA subresource_data = {};
+	u_int color = 0xFFFFFFFF;
+	subresource_data.pSysMem = &color;
+	subresource_data.SysMemPitch = 4;
+	subresource_data.SysMemSlicePitch = 4;
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2d;
+
+	HRESULT hr = Framework::device->CreateTexture2D(&texture2d_desc, &subresource_data, texture2d.GetAddressOf());
+
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc = {};
+	shader_resource_view_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shader_resource_view_desc.Texture2D.MipLevels = 1;
+
+	hr = Framework::device->CreateShaderResourceView(texture2d.Get(), &shader_resource_view_desc, dpsrv);
+
+	//srv.Reset();
+}
+
+
 void FindNodeHasMesh(FbxNode* in_node, std::vector<FbxNode*>& node_array)
 {
 	FbxNodeAttribute *fbx_node_attribute = in_node->GetNodeAttribute();
@@ -441,43 +480,6 @@ StaticMesh::StaticMesh(const char* file_name) :
 
 
 
-void StaticMesh::CreateDummyTexture(ID3D11ShaderResourceView** dpsrv)
-{
-
-
-	D3D11_TEXTURE2D_DESC texture2d_desc = {};
-	texture2d_desc.Width = 1;
-	texture2d_desc.Height = 1;
-	texture2d_desc.MipLevels = 1;
-	texture2d_desc.ArraySize = 1;
-	texture2d_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	texture2d_desc.SampleDesc.Count = 1;
-	texture2d_desc.SampleDesc.Quality = 0;
-	texture2d_desc.Usage = D3D11_USAGE_DEFAULT;
-	texture2d_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	texture2d_desc.CPUAccessFlags = 0;
-	texture2d_desc.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA subresource_data = {};
-	u_int color = 0xFFFFFFFF;
-	subresource_data.pSysMem = &color;
-	subresource_data.SysMemPitch = 4;
-	subresource_data.SysMemSlicePitch = 4;
-
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2d;
-
-	HRESULT hr = Framework::device->CreateTexture2D(&texture2d_desc, &subresource_data, texture2d.GetAddressOf());
-
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc = {};
-	shader_resource_view_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shader_resource_view_desc.Texture2D.MipLevels = 1;
-
-	hr = Framework::device->CreateShaderResourceView(texture2d.Get(), &shader_resource_view_desc, dpsrv);
-
-	//srv.Reset();
-}
 
 
 bool StaticMesh::CreateBuffer(VertexData* v, int v_num, unsigned int* indices, int i_num, ID3D11Buffer** v_buffer, ID3D11Buffer** i_buffer)
@@ -704,7 +706,7 @@ void StaticMesh::Render(const DirectX::XMMATRIX& world_mat)
 
 
 	XMStoreFloat4x4(&wvp, world_mat*GameBrain::view_mat   * GameBrain::projection_mat);
-	XMStoreFloat4x4(&inverse, /*DirectX::XMMatrixTranspose*/(DirectX::XMMatrixInverse(0, world_mat)));
+	XMStoreFloat4x4(&inverse, world_mat /*DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(0, world_mat))*/);
 
 
 	for (auto& mesh : meshes)

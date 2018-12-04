@@ -23,7 +23,7 @@ void GameBrain::Initialize()
 	//load = std::make_unique<Sprite>(L"DATA\\2D\\yomi.png");
 	//win = std::make_unique<Sprite>(L"DATA\\2D\\win.png");
 	//lose = std::make_unique<Sprite>(L"DATA\\2D\\lose.png");
-	projection_mat = DirectX::XMMatrixPerspectiveFovLH(3.14f / 8.0f, static_cast<float>(Framework::SCREEN_WIDTH) / Framework::SCREEN_HEIGHT, 1.0f, 5000.0f);
+	projection_mat = DirectX::XMMatrixPerspectiveFovLH(3.14f / 8.0f, static_cast<float>(Framework::SCREEN_WIDTH) / Framework::SCREEN_HEIGHT, 0.1f, 500.0f);
 
 
 	is_initialized = true;

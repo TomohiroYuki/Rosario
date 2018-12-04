@@ -33,8 +33,6 @@ public:
 
 	std::vector<Mesh> meshes;
 
-	void CreateDummyTexture(ID3D11ShaderResourceView** dpsrv);
-
 	bool CreateBuffer(VertexData* v,int v_num, unsigned int* indices,int i_num, ID3D11Buffer** v_buffer, ID3D11Buffer** i_buffer);
 
 	struct ConstantBuffer

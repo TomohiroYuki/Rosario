@@ -38,6 +38,7 @@ public:
 	static void Tick();
 
 	static void Collide(SphereCollision* sphere, BoxCollision* box);
+	static void Collide(BoxCollision* box1, BoxCollision* box2);
 
 	virtual void CalcInertiaTensor() {}
 	
