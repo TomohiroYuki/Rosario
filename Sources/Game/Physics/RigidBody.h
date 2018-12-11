@@ -157,7 +157,9 @@ public:
 
 			//float inv_solv = 1.0f / solv;
 			angular_velocity += angular_acceleration * dt;
-
+			auto str0 = L"\nangular_velocity:: x:" + std::to_wstring(angular_velocity.x) + L" y:" + std::to_wstring(angular_velocity.y) + L" z:" + std::to_wstring(angular_velocity.z) + L"\n";
+			//std::wstring w = std::to_wstring(penetration) + L"\n";
+			OutputDebugStringW(str0.c_str());
 			////äpë¨ìxÇ…ÇÊÇÈépê®ÇÃçXêV
 			Yukitter::Vector4 w(angular_velocity, 0);
 			//D3DXQUATERNION w(angular_velocity.x, angular_velocity.y, angular_velocity.z, 0);

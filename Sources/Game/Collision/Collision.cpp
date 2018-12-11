@@ -93,7 +93,7 @@ void CollisionBase::Collide(BoxCollision* box1, BoxCollision* box2)
 		float ra = CalcSumOfProjectedVec(l, f1*scale.z, r1*scale.x, u1*scale.y);
 		float rb = extention[loop_count];
 
-		if (ra + rb > Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l)));
+		if (ra + rb > Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l)))
 		{
 
 		}
@@ -115,7 +115,7 @@ void CollisionBase::Collide(BoxCollision* box1, BoxCollision* box2)
 		float ra = CalcSumOfProjectedVec(l, f2*scale.z, r2*scale.x, u2*scale.y);
 		float rb = extention[loop_count];
 
-		if (ra + rb > Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l)));
+		if (ra + rb > Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l)))
 		{
 
 		}
@@ -126,6 +126,7 @@ void CollisionBase::Collide(BoxCollision* box1, BoxCollision* box2)
 
 bool Contact::Resolve()
 {
+
 	auto str0 = L"\nnormal:: x:" + std::to_wstring(normal.x) + L" y:" + std::to_wstring(normal.y) + L" z:" + std::to_wstring(normal.z) + L"\n";
 	std::wstring w = std::to_wstring(penetration) + L"\n";
 	//OutputDebugStringW(w.c_str());
@@ -139,8 +140,11 @@ bool Contact::Resolve()
 	Vector p_dot_b = Cross(objects[1]->rigid_ref->angular_velocity, (impact_location - objects[1]->rigid_ref->actor_ref->GetActorLocation()));
 	p_dot_b += objects[1]->rigid_ref->linear_velocity;
 
-	v_rel = Dot(normal, (p_dot_a - p_dot_b));
 
+	static int count = 0;
+
+	count++;
+	v_rel = Dot(normal, (p_dot_a - p_dot_b));
 
 
 	//•ªqŒvZ
@@ -172,21 +176,12 @@ bool Contact::Resolve()
 	j = numerator / denominator;
 
 
-	std::wstring imp = std::to_wstring(j);
-	imp += L"\n";
-	OutputDebugString(imp.c_str());
+
 
 	Vector impulse = normal * j;
 
 	//impulse+=Cross()
-	if (aaa != 0)
-	{
-		float argument = impulse.Length() / aaa;
-		if (argument < restitution*0.70)
-		{
 
-		}
-	}
 	//imp = L"\nimpulse:: y:" + std::to_wstring(normal.y) + L" z:" + std::to_wstring(normal.z);
 	//OutputDebugString(imp.c_str());
 	float mu = 0.003f;
@@ -197,15 +192,27 @@ bool Contact::Resolve()
 	Vector friction_f = v * mu * j;
 	friction_f = 0;;
 	//OutputDebugStringW()
-	objects[0]->rigid_ref->linear_velocity += impulse * objects[0]->rigid_ref->GetInverseMass() - friction_f;
 	ta = Cross(ra, impulse);
 	ta = XMVector3TransformCoord(ta.ToXMVec(), objects[0]->rigid_ref->CalcInverseTransformedTensor());
-	objects[0]->rigid_ref->angular_velocity += ta;
+	//objects[0]->rigid_ref->angular_velocity += ta;
+	if (objects[0]->rigid_ref->is_movable)
+	{
+		objects[0]->rigid_ref->angular_velocity -= tb;
+		objects[0]->rigid_ref->linear_velocity += impulse * objects[0]->rigid_ref->GetInverseMass() - friction_f;
 
-	objects[1]->rigid_ref->linear_velocity -= impulse * objects[1]->rigid_ref->GetInverseMass() + friction_f;
+	}
 	tb = Cross(rb, impulse);
 	tb = XMVector3TransformCoord(tb.ToXMVec(), objects[1]->rigid_ref->CalcInverseTransformedTensor());
-	objects[1]->rigid_ref->angular_velocity -= tb;
+	if (objects[1]->rigid_ref->is_movable)
+	{
+		objects[1]->rigid_ref->angular_velocity -= tb;
+		objects[1]->rigid_ref->linear_velocity -= impulse * objects[1]->rigid_ref->GetInverseMass() + friction_f;
+
+	}
+
+	/*std::wstring imp = std::to_wstring(tb.Length());
+	imp = L"tb" + std::to_wstring(count) + L":" + imp + L"\n";
+	OutputDebugString(imp.c_str());*/
 
 	//‚ß‚è‚İ—Ê‚Ì‰ğŒˆ
 	normal = normal.GetNormalize();

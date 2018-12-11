@@ -37,6 +37,9 @@
     <Filter Include="Header\Math">
       <UniqueIdentifier>{1a522514-fc88-4fc6-b249-6ed494c7a16d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\System\imgui">
+      <UniqueIdentifier>{725bfce2-cb8c-4d55-b6e1-ad1be3f7d58a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -78,12 +81,27 @@
     <ClCompile Include="..\Sources\Game\Collision\Collision.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\System\ImGui\imgui_impl_dx11.cpp">
+      <Filter>Header\System\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\ImGui\imgui.cpp">
+      <Filter>Header\System\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\ImGui\imgui_impl_win32.cpp">
+      <Filter>Header\System\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\ImGui\imgui_draw.cpp">
+      <Filter>Header\System\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\ImGui\imgui_widgets.cpp">
+      <Filter>Header\System\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\System\ImGui\imgui_demo.cpp">
+      <Filter>Header\System\imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\System\Framework.h">
-      <Filter>Header\System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\System\input\Input.h">
       <Filter>Header\System</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\System\sound\sound.h">
@@ -154,6 +172,18 @@
     </ClInclude>
     <ClInclude Include="..\Sources\Game\Actor\Ball.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\input\Input.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Downloads\imgui-master\imgui-master\imgui.h">
+      <Filter>Header\System\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\ImGui\imgui_impl_dx11.h">
+      <Filter>Header\System\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\ImGui\imgui_impl_win32.h">
+      <Filter>Header\System\imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

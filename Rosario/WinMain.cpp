@@ -4,6 +4,14 @@
 
 #include "System\Framework.h"
 
+
+float Framework::init_velocity;
+float Framework::init_angle[3];
+float Framework::col[3];
+bool  Framework::is_soccerball;
+bool  Framework::is_slowmotion;
+bool  Framework::reset;
+bool  Framework::is_active_air_drag = true;
 //_____________________________________________________________________________
 Microsoft::WRL::ComPtr<ID3D11Device>			Framework::device;
 Microsoft::WRL::ComPtr<ID3D11DeviceContext>		Framework::device_context;
@@ -11,9 +19,11 @@ Microsoft::WRL::ComPtr<IDXGISwapChain>			Framework::swapchain;
 Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	Framework::render_target_view;
 //______________________________________________________________________________
 
+IMGUI_IMPL_API LRESULT  ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam);
 	switch (msg)
 	{
 	case WM_DESTROY:
@@ -37,7 +47,7 @@ INT WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance, LPWSTR cmd_line
 {
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(924);
+	//_CrtSetBreakAlloc(91396);
 #endif
 	WNDCLASSEX wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -62,5 +72,6 @@ INT WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance, LPWSTR cmd_line
 	Framework framework(hwnd);
 
 	framework.MainLoop();
+	GameBrain::GetInstance()->ReleaseImGui();
 	return 0;
 }

@@ -134,11 +134,15 @@ PrimitiveBase::PrimitiveBase(PrimitiveType prim_type)
 		break;
 	case PrimitiveBase::PRIMITIVE_TYPE_SPHERE:
 		CreateSphereData();
+		break;
+	case PrimitiveBase::PRIMITIVE_TYPE_AXIS:
+		CreateAxisData();
+		break;
 	default:
 		break;
 	}
 
-	if(vertex_count>0)
+	if (vertex_count > 0)
 		CreateBuffer(vertex_count, index_count);
 }
 void PrimitiveBase::UpdateBuffer()
@@ -151,7 +155,7 @@ void PrimitiveBase::UpdateBuffer()
 		Framework::device_context->UpdateSubresource(index_buffer.Get(), 0, nullptr, indices.data(), 0, 0);
 
 	}
-	else 
+	else
 		CreateBuffer(vertex_count, index_count);
 	/*if (index_buffer)
 		Framework::device_context->UpdateSubresource(vertex_buffer.Get(), 0, nullptr, vertices.data(), 0, 0);
@@ -359,7 +363,7 @@ void PrimitiveBase::Render(Transform transform, Transform parent)
 
 	ConstantBuffer cb;
 
-	XMMATRIX world, S, R, T,w0,w1;
+	XMMATRIX world, S, R, T, w0, w1;
 
 	S = XMMatrixScaling(transform.scale3d.x, transform.scale3d.y, transform.scale3d.z);
 
@@ -433,8 +437,8 @@ void PrimitiveBase::Render(Vector scale)
 
 	S = XMMatrixScaling(scale.x, scale.y, scale.z);
 
-	R = XMMatrixRotationRollPitchYaw(0,0, 0);
-	T = XMMatrixTranslation(0,0, 0);
+	R = XMMatrixRotationRollPitchYaw(0, 0, 0);
+	T = XMMatrixTranslation(0, 0, 0);
 	world = S * R*T;
 
 	XMFLOAT4X4 wvp;
@@ -493,10 +497,10 @@ void PrimitiveBase::CreateGridData()
 	v.position = DirectX::XMFLOAT3(0, -500, 0);
 	vertices.push_back(v);
 	count++;
-	
+
 	for (auto& a : vertices)
 	{
-		a.color= DirectX::XMFLOAT4(1, 1, 1,1);
+		a.color = DirectX::XMFLOAT4(1, 1, 1, 1);
 	}
 
 	for (int i = 0; i < count; i++)
@@ -523,7 +527,7 @@ void PrimitiveBase::CreateBoxData()
 
 	for (int i = 0; i < 24; i++)
 	{
-		
+
 		indices.push_back(box_indeces[i]);
 	}
 	for (auto& a : vertices)
@@ -541,6 +545,21 @@ const int SPHERE_INDEX[] =
 	0,1,1,2,2,3,3,4,4,5,6,6,7,8,9,9,10,10,11,11,12,12,13,13,14,14,15,15,16,16,17,17,18,18,19,19,20,
 };
 
+void PrimitiveBase::CreateAxisData()
+{
+	Vertex v;
+	v.position = XMFLOAT3( 0,0,-0.5f);
+	v.color = DirectX::XMFLOAT4(0.6f, 0.6f, 0.6f, 1);
+	vertices.push_back(v);
+	v.position = XMFLOAT3(0, 0, 0.5f);
+	vertices.push_back(v);
+	indices.push_back(0);
+	indices.push_back(1);
+	vertex_count = 2;
+	index_count = 2;
+}
+
+
 void PrimitiveBase::CreateSphereData()
 {
 	Vertex v;
@@ -548,10 +567,10 @@ void PrimitiveBase::CreateSphereData()
 	const int COUNT = 14;
 	for (int i = 0; i < COUNT; i++)
 	{
-		v.position = XMFLOAT3(sinf((_PI)*(F_CAST(i)/F_CAST(COUNT/2.0f))),0,cosf((_PI)*(F_CAST(i) / F_CAST(COUNT / 2.0f))));
+		v.position = XMFLOAT3(sinf((_PI)*(F_CAST(i) / F_CAST(COUNT / 2.0f))), 0, cosf((_PI)*(F_CAST(i) / F_CAST(COUNT / 2.0f))));
 		vertices.push_back(v);
 		indices.push_back(i);
-		
+
 		indices.push_back((i + 1) == COUNT ? 0 : i + 1);
 		vertex_count++;
 		index_count++;
@@ -560,11 +579,11 @@ void PrimitiveBase::CreateSphereData()
 	int count = COUNT;
 	for (int i = 0; i < COUNT; i++)
 	{
-		v.position = XMFLOAT3(0,sinf((_PI)*(F_CAST(i) / F_CAST(COUNT / 2.0f))),  cosf((_PI)*(F_CAST(i) / F_CAST(COUNT / 2.0f))));
+		v.position = XMFLOAT3(0, sinf((_PI)*(F_CAST(i) / F_CAST(COUNT / 2.0f))), cosf((_PI)*(F_CAST(i) / F_CAST(COUNT / 2.0f))));
 		vertices.push_back(v);
-		indices.push_back(i+ count);
+		indices.push_back(i + count);
 
-		indices.push_back((i + 1) == COUNT ? count : i + 1+count);
+		indices.push_back((i + 1) == COUNT ? count : i + 1 + count);
 		vertex_count++;
 		index_count++;
 		index_count++;
@@ -580,3 +599,88 @@ void PrimitiveBase::CreateSphereData()
 }
 
 
+void Axis::Render(Yukitter::Vector angular_velocity)
+{
+	
+	UINT strides = { sizeof(Vertex) };
+	UINT offsets[2] = { 0, 0 };
+	Framework::device_context->IASetVertexBuffers(0, 1, vertex_buffer.GetAddressOf(), &strides, offsets);
+	Framework::device_context->IASetIndexBuffer(index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	Framework::device_context->IASetInputLayout(input_layout.Get());
+	Framework::device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	Framework::device_context->VSSetShader(vertex_shader.Get(), NULL, 0);
+
+	Framework::device_context->PSSetShader(pixel_shader.Get(), NULL, 0);
+	Framework::device_context->OMSetDepthStencilState(depth_stencil_state.Get(), 0);
+	Framework::device_context->RSSetState(rasterizer_state.Get());
+	FLOAT BlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	//XMVECTOR eye = XMVectorSet(0, 0, 10, 1.0f);
+	//XMVECTOR At = XMVectorSet(0, 0, 0, 1.0f);
+	Vector camera_pos = GameBrain::GetInstance()->GetActiveCameraLocation();
+	Vector camera_focus = GameBrain::GetInstance()->GetActiveCameraFocus();
+	XMVECTOR eye = XMVectorSet(camera_pos.x, camera_pos.y, camera_pos.z, 1.0f);
+	XMVECTOR At = XMVectorSet(camera_focus.x + 0.01f, camera_focus.y, camera_focus.z, 1.0f);
+
+
+	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	GameBrain::view_mat = XMMatrixLookAtLH(eye, At, Up);
+	GameBrain::projection_mat = XMMatrixPerspectiveFovLH(3.14f / 8.0f, static_cast<float>(Framework::SCREEN_WIDTH) / Framework::SCREEN_HEIGHT, 1.0f, 5000.0f);
+
+
+
+	ConstantBuffer cb;
+
+	XMMATRIX world, S, R, T;
+
+	S = XMMatrixScaling(transform.scale3d.x, transform.scale3d.y, transform.scale3d.z);
+
+	//R = XMMatrixRotationRollPitchYaw(transform.rotation.pitch, transform.rotation.yaw, transform.rotation.roll);
+	R = XMMatrixRotationQuaternion(orientation.ToXMVec());
+	
+
+	XMFLOAT4X4 rot = {   1,0,0,0
+						,0,1,0,0,
+						 0,0,1,0,
+						 0,0,0,1 };
+
+	Vector v3 = angular_velocity.GetNormalize();
+	Vector v2 = Cross(v3, Vector(9999, 9999, 9999).GetNormalize());
+	Vector v1 = Cross(v3, v2);
+	rot._11 = v1.x;
+	rot._12 = v1.y;
+	rot._13 = v1.z;
+	rot._21 = v2.x;
+	rot._22 = v2.y;
+	rot._23 = v2.z;
+	rot._31 = v3.x;
+	rot._32 = v3.y;
+	rot._33 = v3.z;
+
+	R = XMLoadFloat4x4(&rot);
+
+	T = XMMatrixTranslation(transform.translation.x, transform.translation.y, transform.translation.z);
+	world = S * R * T;
+
+	XMFLOAT4X4 wvp;
+	XMFLOAT4X4 inverse;
+	//XMStoreFloat4x4(&wvp, Scene::world_mat * Scene::view_mat * GameBrain::projection_mat);
+	XMStoreFloat4x4(&wvp, world*GameBrain::view_mat   * GameBrain::projection_mat);
+	XMStoreFloat4x4(&inverse, DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(0, world)));
+
+
+
+	cb.wvp = wvp;
+	//cb.color = XMFLOAT4(1, 1, 1, 1);
+
+	Framework::device_context->UpdateSubresource(constant_buffer.Get(), 0, NULL, &cb, 0, 0);
+	Framework::device_context->VSSetConstantBuffers(0, 1, constant_buffer.GetAddressOf());
+	Framework::device_context->PSSetConstantBuffers(0, 1, constant_buffer.GetAddressOf());
+	//Framework::device_context->PSSetShaderResources(0, 1, s.diffuse.srv.GetAddressOf());
+	//Framework::device_context->PSSetShaderResources(1, 1, shader_structure->srv.GetAddressOf());
+
+	Framework::device_context->PSSetSamplers(0, 1, sampler_state.GetAddressOf());
+
+	Framework::device_context->DrawIndexed(index_count, 0, 0);
+
+}

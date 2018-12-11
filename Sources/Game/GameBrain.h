@@ -1,6 +1,7 @@
 #pragma once
 #include "game\YQCamera.h"
 //#include "source\system\object\sprite\sprite.h"
+#include "System\DirectXTK\SpriteFont.h"
 #include "game\scene\Scene.h"
 
 #include <memory>
@@ -26,10 +27,12 @@ private:
 	//std::unique_ptr<Sprite> load;
 	//std::unique_ptr<Sprite> win;
 	//std::unique_ptr<Sprite> lose;
+	std::unique_ptr<DirectX::SpriteBatch> sprite_batch;
+	std::unique_ptr<DirectX::SpriteFont> sprite_font;
 public:
 	std::unique_ptr<Scene> scene;
 	int timer = 0;
-	void Initialize();
+	void Initialize(void* hwnd);
 
 
 	enum GAME_STATE
@@ -89,5 +92,11 @@ public:
 	{
 		return active_camera_reference;
 	}
+	void RenderString(std::wstring str, Vector2D location);
 
+
+	void UpdateImGui();
+	void RenderImGui();
+
+	void ReleaseImGui();
 };

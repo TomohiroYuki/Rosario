@@ -10,11 +10,13 @@ struct BallParameters
 	float r;
 	float mass;
 	float restitution;
+	std::string path;
 };
 
 const BallParameters BALL_PARAMS[] =
 {
-	{"baseball_npb2015-",(0.0729f + 0.0748f) / 2.0f / 2.0f,(141.7f + 148.8f) / 2.0f,0.4134f }
+	{"baseball_npb2015-",(0.0729f + 0.0748f) / 2.0f / 2.0f,(141.7f + 148.8f) / 2.0f,0.4134f ,"..\\Assets\\3D\\BaseBall\\ball.fbx"},
+	{"soccer_ball",0.22f/2.0f,(410.0f +450.0f) / 2.0f,0.4134f ,"..\\Assets\\3D\\Soccer\\ball.fbx" },
 };
 
 
@@ -22,23 +24,24 @@ class Ball :public Pawn
 {
 public:
 	Ball() :
-		Pawn("..\\Assets\\3D\\ball.fbx", CollisionBase::COL_TYPE_SPHERE)
+		Pawn(BALL_PARAMS[current_ball_index].path.c_str(), CollisionBase::COL_TYPE_SPHERE)
 	{
-
-		GetActorTransform().SetScale(BALL_PARAMS[0].r);
-		rigid_body->mass = BALL_PARAMS[0].mass;
-		rigid_body->restitution = BALL_PARAMS[0].restitution;
+		int ball_index = 1;
+		GetActorTransform().SetScale(BALL_PARAMS[current_ball_index].r);
+		rigid_body->mass = BALL_PARAMS[current_ball_index].mass;
+		rigid_body->restitution = BALL_PARAMS[current_ball_index].restitution;
 		line = std::make_unique<LINE>();
-		
+		axis = std::make_unique<Axis>();
+		axis->scale = 1;
 	}
-
+	static int current_ball_index  ;
 	std::unique_ptr<LINE> line;
-
+	std::unique_ptr<Axis> axis;
 	void Tick(float dt)override
 	{
 		Pawn::Tick(dt);
-
-
+		axis->UpdateAxisByAngularVelocity(rigid_body->angular_velocity);
+		axis->transform.SetLocation(transform.translation);
 	}
 
 	void Render()override
@@ -46,5 +49,6 @@ public:
 		Pawn::Render();
 		
 		line->Render(Yukitter::Vector(1));
+		axis->Render(rigid_body->angular_velocity);
 	}
 };

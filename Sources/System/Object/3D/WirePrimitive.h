@@ -18,6 +18,7 @@ public:
 		PRIMITIVE_TYPE_GRID=0,
 		PRIMITIVE_TYPE_BOX ,
 		PRIMITIVE_TYPE_SPHERE,
+		PRIMITIVE_TYPE_AXIS,
 		PRIMITIVE_TYPE_LINE
 	};
 public:
@@ -62,7 +63,7 @@ public:
 	int index_count=0;
 
 
-
+	void CreateAxisData();
 	void CreateGridData();
 	void CreateBoxData();
 	void CreateSphereData();
@@ -131,6 +132,52 @@ private:
 
 public:
 
+
+
+};
+
+class Axis :public PrimitiveBase
+{
+
+public:
+	Axis() :
+		PrimitiveBase(PrimitiveBase::PrimitiveType::PRIMITIVE_TYPE_AXIS)
+	{
+		//transform.SetScale({ 50,100.0f,50 });
+
+	}
+private:
+
+public:
+	Yukitter::Vector4 orientation = {0,0,1,1};
+	float scale = 1.0f;
+	void UpdateAxisByAngularVelocity(Yukitter::Vector angular_velocity)
+	{
+		if (angular_velocity.Length() != .0f)
+		{
+			/*transform.SetScale(scale);
+			Yukitter::Vector v = angular_velocity.GetNormalize();
+			v /= angular_velocity.Length();
+			Yukitter::Vector4 w(angular_velocity, 0);
+			Yukitter::Vector v, 
+			float angle;
+			DirectX::XMVECTOR out;
+			DirectX::XMQuaternionToAxisAngle(&out, &angle, w.ToXMVec());
+			transform.SetRotation()
+			Yukitter::Vector kuso(4, 4, 4);
+				 
+			auto  p =DirectX::XMQuaternionRotationAxis(kuso.ToXMVec(), 0);
+
+			orientation = p;
+			int avvv = 0;*/
+		}
+		else
+		{
+			transform.SetScale(0);
+		}
+	}
+
+	void Render(Yukitter::Vector angular_velocity);
 
 
 };

@@ -5,7 +5,9 @@
 #include "input\Input.h"
 #include "Game\GameBrain.h"
 #pragma comment(lib,"d3d11.lib")
-
+#include "System\ImGui\imgui.h"
+#include "System\ImGui\imgui_impl_win32.h"
+#include "System\ImGui\imgui_impl_dx11.h"
 
 
 class Framework final
@@ -26,6 +28,13 @@ public:
 	static Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	render_target_view;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>			depth_stencil_view;
 
+	static float init_velocity;
+	static float init_angle[3];
+	static bool  is_soccerball;
+	static bool  is_slowmotion;
+	static bool  reset;
+	static bool  is_active_air_drag;
+	static float col[3];
 	void DrawGrid()
 	{
 		//device_context->draw
@@ -133,28 +142,86 @@ public:
 		SoundBrain::getInstance()->Initialize(hwnd);
 
 		RESOURCEM->Initialize();
-		GameBrain::GetInstance()->Initialize();
+		GameBrain::GetInstance()->Initialize(hwnd);
+		init_velocity = 100;
+		is_soccerball = false;
+		is_slowmotion = false;
+		for (int i = 0; i < 3; i++)
+		{
+			//col[i] = 0;
+			init_angle[i] = 0;
+		}
+		col[0] = 1.0f;
+		col[1] = 0.3f;
+		col[2] = 0.3f;
+		reset = false;
 		return true;
 	}
 
 	bool Tick()
 	{
+		GameBrain::GetInstance()->UpdateImGui();
 		InputBrain::getInstance()->Tick();
 
-		static bool i = false;
-		if (INPUT->KeyGet(DIK_I) == 3)
+		
+		/////////
+		static bool isOpen = true;
+		//ImGui::ShowDemoWindow(&isOpen);
+
+		ImGui::Begin("Stats", nullptr);
+		float f = 60.0f;
+		ImGui::LabelText("", "FPS:%4.2f (%4.2f ms)", f);
+		//ImGui::LabelText("", "Camera Pos:(%.2f, %.2f, %.2f )", cameraPosition.x, cameraPosition.y, cameraPosition.z);
+		ImGui::Spacing();
+		ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Once);
+		if (ImGui::CollapsingHeader("5Key"))
 		{
-			i = !i;
+			ImGui::Checkbox("soccer ball", &is_soccerball);
+			ImGui::Checkbox("slow motion", &is_slowmotion);
+			ImGui::Checkbox("Air Drag", &is_active_air_drag);
+			//ImGui::SliderFloat("Gamma", 0, 0.0f, 4.0f);
+			// ...
+			ImGui::SliderFloat("Init Velocity", &init_velocity, 0, 200);
+			ImGui::SliderFloat3("Init Rot Per Sec", init_angle, -100, 100);
+			ImGui::ColorEdit3("Line Color",col );
+
+			// ...
+			//ImGui::TreePop();
 		}
-		if (!i)
+		if (ImGui::Button("Variables Reset"))
+		{
+			init_velocity = 100;
+			for (int i = 0; i < 3; i++)
+			{
+				init_angle[i] = 0;
+			}
+		}
+
+		if (ImGui::Button("Line Reset"))
+		{
+			reset = true;
+		}
+		//...
+		ImGui::End();
+		static bool i = is_slowmotion;
+
+		if (i != is_slowmotion)
+		{
+			//is_slowmotion = !is_slowmotion;
+		}
+		if (!is_slowmotion)
 			GameBrain::GetInstance()->scene->Tick(1.0f / 60.0f);
 		else
 			GameBrain::GetInstance()->scene->Tick(1.0f / 300.0f);
+		i = is_slowmotion;
+		/////////
+
 		return true;
 	}
 
 	void Render()
 	{
+
 		D3D11_VIEWPORT vp;
 		vp.Width = SCREEN_WIDTH;
 		vp.Height = SCREEN_HEIGHT;
@@ -167,9 +234,10 @@ public:
 		device_context->ClearRenderTargetView(render_target_view.Get(), ClearColor);
 		device_context->ClearDepthStencilView(depth_stencil_view.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 		device_context->OMSetRenderTargets(1, render_target_view.GetAddressOf(), depth_stencil_view.Get());
-
 		GameBrain::GetInstance()->scene->Render(1.0f / 60.0f);
-
+		GameBrain::GetInstance()->RenderImGui();
+		//ImGui::EndFrame();
+		//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		swapchain->Present(1, 0);
 	}
 

@@ -36,7 +36,7 @@ Pawn::Pawn(const char* filename, CollisionBase::COLLISION_TYPE type ) :
 
 void Pawn::Tick(float dt)
 {
-	rigid_body->Tick(dt);
+	//rigid_body->Tick(dt);
 }
 
 void Pawn::SetIsSimulated(bool input)
