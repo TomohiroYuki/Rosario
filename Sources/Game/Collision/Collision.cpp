@@ -199,7 +199,7 @@ bool Contact::Resolve()
 	{
 		objects[0]->rigid_ref->angular_velocity -= tb;
 		objects[0]->rigid_ref->linear_velocity += impulse * objects[0]->rigid_ref->GetInverseMass() - friction_f;
-
+		//objects[0]->rigid_ref->angular_velocity += objects[0]->GetActorReference()->GetActorScale().x* objects[0]->rigid_ref->CalcInverseTransformedTensor();
 	}
 	tb = Cross(rb, impulse);
 	tb = XMVector3TransformCoord(tb.ToXMVec(), objects[1]->rigid_ref->CalcInverseTransformedTensor());

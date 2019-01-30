@@ -16,7 +16,8 @@ struct BallParameters
 const BallParameters BALL_PARAMS[] =
 {
 	{"baseball_npb2015-",(0.0729f + 0.0748f) / 2.0f / 2.0f,(141.7f + 148.8f) / 2.0f,0.4134f ,"..\\Assets\\3D\\BaseBall\\ball.fbx"},
-	{"soccer_ball",0.22f/2.0f,(410.0f +450.0f) / 2.0f,0.4134f ,"..\\Assets\\3D\\Soccer\\ball.fbx" },
+	{"soccer_ball",0.22f / 2.0f,(410.0f + 450.0f) / 2.0f,0.4134f ,"..\\Assets\\3D\\Soccer\\ball.fbx" },
+	{"table_tennis_3star",0.040f / 2.0f,2.4f,0.8134f ,"..\\Assets\\3D\\BaseBall\\ball.fbx" },
 };
 
 
@@ -34,7 +35,7 @@ public:
 		axis = std::make_unique<Axis>();
 		axis->scale = 1;
 	}
-	static int current_ball_index  ;
+	static int current_ball_index;
 	std::unique_ptr<LINE> line;
 	std::unique_ptr<Axis> axis;
 	void Tick(float dt)override
@@ -47,7 +48,7 @@ public:
 	void Render()override
 	{
 		Pawn::Render();
-		
+
 		line->Render(Yukitter::Vector(1));
 		axis->Render(rigid_body->angular_velocity);
 	}

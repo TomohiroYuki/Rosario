@@ -230,7 +230,7 @@ public:
 		vp.TopLeftX = 0;
 		vp.TopLeftY = 0;
 		device_context->RSSetViewports(1, &vp);
-		float ClearColor[4] = { 0.2f,0.2f,0.2f,1.0f }; //Á‹F
+		float ClearColor[4] = { 0,0,0,1.0f }; //Á‹F
 		device_context->ClearRenderTargetView(render_target_view.Get(), ClearColor);
 		device_context->ClearDepthStencilView(depth_stencil_view.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 		device_context->OMSetRenderTargets(1, render_target_view.GetAddressOf(), depth_stencil_view.Get());

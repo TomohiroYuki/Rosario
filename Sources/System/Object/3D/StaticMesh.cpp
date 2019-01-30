@@ -32,7 +32,7 @@ void MeshBase::CreateDummyTexture(ID3D11ShaderResourceView** dpsrv)
 	texture2d_desc.MiscFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA subresource_data = {};
-	u_int color = 0xFFFFFFFF;
+	u_int color = 0xFF3F3F3F;
 	subresource_data.pSysMem = &color;
 	subresource_data.SysMemPitch = 4;
 	subresource_data.SysMemSlicePitch = 4;
