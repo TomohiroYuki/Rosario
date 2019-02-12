@@ -24,11 +24,9 @@ public:
 private:
 	static Yukitter::YQCamera* active_camera_reference;
 	std::unique_ptr<Yukitter::YQCamera> default_camera;
-	//std::unique_ptr<Sprite> load;
-	//std::unique_ptr<Sprite> win;
-	//std::unique_ptr<Sprite> lose;
 	std::unique_ptr<DirectX::SpriteBatch> sprite_batch;
 	std::unique_ptr<DirectX::SpriteFont> sprite_font;
+	//std::list<std::unique_ptr<Actor>> geometry_collection;
 public:
 	std::unique_ptr<Scene> scene;
 	int timer = 0;

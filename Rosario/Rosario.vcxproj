@@ -164,6 +164,8 @@
     <ClInclude Include="..\Sources\math\Vector4.h" />
     <ClInclude Include="..\Sources\math\yuki_math.h" />
     <ClInclude Include="..\Sources\Shader\Shader.h" />
+    <ClInclude Include="..\Sources\System\Cast.h" />
+    <ClInclude Include="..\Sources\System\CoreMinimal.h" />
     <ClInclude Include="..\Sources\System\Framework.h" />
     <ClInclude Include="..\Sources\System\ImGui\imgui_impl_dx11.h" />
     <ClInclude Include="..\Sources\System\ImGui\imgui_impl_win32.h" />
@@ -173,6 +175,10 @@
     <ClInclude Include="..\Sources\System\Object\3D\WirePrimitive.h" />
     <ClInclude Include="..\Sources\System\Object\3D\SkeltalMesh.h" />
     <ClInclude Include="..\Sources\System\Object\3D\StaticMesh.h" />
+    <ClInclude Include="..\Sources\System\Object\Component\BaseComponent.h" />
+    <ClInclude Include="..\Sources\System\Object\Component\CapsuleComponent.h" />
+    <ClInclude Include="..\Sources\System\Object\Component\PrimitiveComponent.h" />
+    <ClInclude Include="..\Sources\System\Object\Component\SphereComponent.h" />
     <ClInclude Include="..\Sources\System\ResourceManager.h" />
     <ClInclude Include="..\Sources\System\sound\dsound.h" />
     <ClInclude Include="..\Sources\System\sound\sound.h" />

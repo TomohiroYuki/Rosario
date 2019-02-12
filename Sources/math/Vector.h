@@ -81,9 +81,20 @@ namespace Yukitter
 		return in_f > 0 ? in_f : -1 * in_f;
 	}
 
+	F_INLINE float Clamp(float value,float in_min,float in_max)
+	{
+		return value > in_min ? (value<in_max?value: in_max) : in_min;
+	}
+
+
 	F_INLINE float Dot(const Vector& v0, const Vector& v1)
 	{
 		return v0.x*v1.x + v0.y*v1.y + v0.z*v1.z;
+	}
+
+	F_INLINE Vector GetProjectedVectorToPlane(Vector in_vec,Vector normal)
+	{
+		return (in_vec - (normal*Dot(in_vec, normal)));
 	}
 
 	F_INLINE Vector Cross(const Vector& v0, const Vector& v1)

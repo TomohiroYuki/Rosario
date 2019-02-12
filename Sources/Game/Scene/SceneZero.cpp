@@ -15,6 +15,7 @@ void SceneZero::Initialize()
 
 
 	GameBrain::ActivateCamera(camera.get());
+
 	//camera->transform.SetLocation()
 	cube = std::make_unique<Pawn>("..\\Assets\\StandardAssets\\cube.fbx", CollisionBase::COLLISION_TYPE::COL_TYPE_BOX);
 	cube->GetActorTransform().SetScale(Yukitter::Vector(100.0f, 0.2f, 10.0f));
@@ -36,19 +37,7 @@ void SceneZero::Tick(float dt)
 	//yuppi_star->Tick();
 	//test_object->Tick();
 	//rigid->Tick(1.0f/60.0f);
-	static bool b = false;
-	static bool bb = false;
-	if (INPUT->KeyGet(DIK_O) == 3)
-	{
-		bb = !bb;
-	}
 
-	if (Framework::reset)
-	{
-		Framework::reset = false;
-		ball_list.clear();
-		balls = 0;
-	}
 
 	static bool before_ball = Framework::is_soccerball;
 	if (Framework::is_soccerball != before_ball)
@@ -57,120 +46,67 @@ void SceneZero::Tick(float dt)
 
 	}
 	before_ball = Framework::is_soccerball;
-	//current_ball_index
-	if (bb)return;
 
 	//TODO::”xä
-	if (INPUT->KeyGet(DIK_3) == 3)
-	{
 
-		b = true;
-		ball_list.emplace_back(std::make_unique<Ball>());
-		ball_list[balls]->line->Clear();
-		ball_list[balls]->line->color = Yukitter::Vector4(0, 1, 1, 1);
-		ball_list[balls]->GetActorTransform().SetLocation(Yukitter::Vector(0, 1.8f, 0));
-		ball_list[balls]->collision->CalcInertiaTensor();
-		ball_list[balls]->RotateOrientation({ 0,1,0 }, 3.141592f / 2.0f);
-		ball_list[balls]->rigid_body->linear_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->angular_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->AddInitialTorque(Yukitter::Vector(0, 0, 0));
-
-		ball_list[balls]->rigid_body->AddInitialVelocity(Yukitter::Vector(150 * 1000 / 60.0f / 60.0f, -1.5f, 0));
-		ball_list[balls]->SetIsSimulated(true);
-		balls++;
-	}
-	if (INPUT->KeyGet(DIK_2) == 3)
-	{
-
-		b = true;
-		ball_list.emplace_back(std::make_unique<Ball>());
-		ball_list[balls]->line->Clear();
-		ball_list[balls]->line->color = Yukitter::Vector4(0, 1, 0, 1);
-		ball_list[balls]->GetActorTransform().SetLocation(Yukitter::Vector(0, 1.8f, 0));
-		ball_list[balls]->collision->CalcInertiaTensor();
-		ball_list[balls]->RotateOrientation({ 0,1,0 }, 3.141592f / 2.0f);
-		ball_list[balls]->rigid_body->linear_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->angular_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->AddInitialTorque(Yukitter::Vector(0, 25, 6));
-
-		ball_list[balls]->rigid_body->AddInitialVelocity(Yukitter::Vector(120 * 1000 / 60.0f / 60.0f, -0.3f, 0.3f));
-		ball_list[balls]->SetIsSimulated(true);
-		balls++;
-	}
-	if (INPUT->KeyGet(DIK_1) == 3)
-	{
-		//ball_list.clear();
-		//balls = 0;
-		b = true;
-		ball_list.emplace_back(std::make_unique<Ball>());
-		ball_list[balls]->line->Clear();
-		ball_list[balls]->line->color = Yukitter::Vector4(1, 0, 0, 1);
-		ball_list[balls];
-		ball_list[balls]->GetActorTransform().SetLocation(Yukitter::Vector(0, 1.8f, 0));
-		ball_list[balls]->collision->CalcInertiaTensor();
-		ball_list[balls]->rigid_body->linear_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->angular_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->AddInitialTorque(Yukitter::Vector(0, 0, 44));
-
-		ball_list[balls]->rigid_body->AddInitialVelocity(Yukitter::Vector(150 * 1000 / 60.0f / 60.0f, -1.5f, 0));
-		ball_list[balls]->SetIsSimulated(true);
-		balls++;
-	}
-	if (INPUT->KeyGet(DIK_4) == 3)
-	{
-		b = true;
-		ball_list.emplace_back(std::make_unique<Ball>());
-		ball_list[balls]->line->color = Yukitter::Vector4(0, 0, 1, 1);
-		ball_list[balls]->line->Clear();
-		ball_list[balls]->GetActorTransform().SetLocation(Yukitter::Vector(0, 1.1f, 0));
-		ball_list[balls]->collision->CalcInertiaTensor();
-		ball_list[balls]->rigid_body->linear_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->angular_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->AddInitialTorque(Yukitter::Vector(0, 22, -16));
-
-		ball_list[balls]->rigid_body->AddInitialVelocity(Yukitter::Vector(100 * 1000 / 60.0f / 60.0f, 3.9f, 0.35f));
-		ball_list[balls]->SetIsSimulated(true);
-		balls++;
-	}
-
-	if (INPUT->KeyGet(DIK_5) == 3)
-	{
-
-		b = true;
-		ball_list.emplace_back(std::make_unique<Ball>());
-		ball_list[balls]->line->Clear();
-		ball_list[balls]->line->color = Yukitter::Vector4(Framework::col[0], Framework::col[1], Framework::col[2], 1);
-		ball_list[balls]->GetActorTransform().SetLocation(Yukitter::Vector(0, 1.8f, 0));
-		ball_list[balls]->collision->CalcInertiaTensor();
-		ball_list[balls]->RotateOrientation({ 0,1,0 }, 3.141592f / 2.0f);
-		ball_list[balls]->rigid_body->linear_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->angular_velocity = Yukitter::Vector();
-		ball_list[balls]->rigid_body->AddInitialTorque(Yukitter::Vector(Framework::init_angle[0], Framework::init_angle[1], Framework::init_angle[2]));
-
-		ball_list[balls]->rigid_body->AddInitialVelocity(Yukitter::Vector(Framework::init_velocity * 1000 / 60.0f / 60.0f, -1.5f, 0));
-		ball_list[balls]->SetIsSimulated(true);
-		balls++;
-	}
-	if (!b)return;
 	//sphere->line->AddPoint(sphere->GetActorLocation());
 
+
+	if (INPUT->KeyGet(DIK_RSHIFT))
+	{
+		cube->RotateOrientation({ 0,0,1 }, 0.001f);
+	}
+	if (INPUT->KeyGet(DIK_LSHIFT))
+	{
+		cube->RotateOrientation({ 0,0,-1 }, 0.001f);
+	}
 	const int solv = 5;
 	//sphere->rigid_body->AddMagnusForce();
 
-	static bool aaaa = true;
-	if (INPUT->KeyGet(DIK_G) == 3)
+	
+	if (INPUT->KeyGet(DIK_SPACE) == 3)
 	{
-		aaaa = !aaaa;
+		auto a_cube = std::make_unique<Pawn>("..\\Assets\\StandardAssets\\cube.fbx", CollisionBase::COLLISION_TYPE::COL_TYPE_BOX);
+		a_cube->GetActorTransform().SetLocation({ 0,1,0 });
+		a_cube->GetActorTransform().SetScale(0.2f);
+		a_cube->SetIsSimulated(true);
+		cubes.emplace_back(std::move(a_cube));
+	
 	}
-	//if()
+	if (INPUT->KeyGet(DIK_3) == 3)
+	{
+		ball_list.emplace_back(std::make_unique<Ball>());
+		ball_list[balls]->line->Clear();
+		ball_list[balls]->line->color = Yukitter::Vector4(0, 1, 1, 1);
+		ball_list[balls]->GetActorTransform().SetLocation(Yukitter::Vector(0, 0.2f, 0));
+		ball_list[balls]->collision->CalcInertiaTensor();
+		ball_list[balls]->RotateOrientation({ 0,1,0 }, 3.141592f / 2.0f);
+		ball_list[balls]->rigid_body->linear_velocity = Yukitter::Vector();
+		ball_list[balls]->rigid_body->angular_velocity = Yukitter::Vector();
+		ball_list[balls]->rigid_body->AddInitialTorque(Yukitter::Vector(0, 1*2*3.14f,0 ));
 
+		ball_list[balls]->rigid_body->AddInitialVelocity(Yukitter::Vector(0 * 1000 / 60.0f / 60.0f, 0, 0));
+		ball_list[balls]->SetIsSimulated(true);
+		balls++;
+	}
 	for (auto& a : ball_list)
 	{
 		a->line->AddPoint(a->GetActorLocation());
 		a->rigid_body->AddMagnusForce();;
 		if (Framework::is_active_air_drag)
+		{
 			a->rigid_body->AddDragForce();
+
+		}
 	}
+
+
+	for (auto& a_cube : cubes)
+	{
+		//a_cube->rigid_body->AddDragForce();
+		a_cube->rigid_body->Tick(dt);
+	}
+
 	for (int i = 0; i < solv; i++)
 	{
 		//sphere->rigid_body->Tick(dt, solv);
@@ -185,13 +121,17 @@ void SceneZero::Tick(float dt)
 		for (auto& a : ball_list)
 		{
 			Collision::Collide(dynamic_cast<SphereCollision*>(a->collision.get()), dynamic_cast<BoxCollision*>(cube->collision.get()));
+			
+		
 		}
 		//Collision::Collide(dynamic_cast<SphereCollision*>(sphere->collision.get()), dynamic_cast<BoxCollision*>(cube->collision.get()));
 
 		Collision::Tick();
 
 
+
 	}
+	
 	cube->rigid_body->ResetAccumrator();
 	//sphere->rigid_body->ResetAccumrator();
 	for (auto& a : ball_list)
@@ -199,16 +139,31 @@ void SceneZero::Tick(float dt)
 		a->rigid_body->ResetAccumrator();
 		a->Tick(1.0f / 60.0f);
 	}
+	/*for (auto& a : ball_list)
+	{
+		a->rigid_body->ResetAccumrator();
+		a->Tick(1.0f / 60.0f);
+	}*/
 
+	for (auto& a_cube : cubes)
+	{
+		a_cube->rigid_body->ResetAccumrator();
+	}
 }
 void SceneZero::Render(float dt)
 {
 	grid->Render(Vector(0.1f));
 
-	if (INPUT->KeyGet(DIK_V) == 3)
+	/*if (INPUT->KeyGet(DIK_V) == 3)
 	{
 		ChangeView();
+	}*/
+
+	for (auto& a_cube : cubes)
+	{
+		a_cube->Render();
 	}
+
 	for (auto& a : ball_list)
 	{
 		a->Render();

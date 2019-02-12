@@ -185,6 +185,24 @@
     <ClInclude Include="..\Sources\System\ImGui\imgui_impl_win32.h">
       <Filter>Header\System\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\System\Cast.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\CoreMinimal.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Object\Component\BaseComponent.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Object\Component\PrimitiveComponent.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Object\Component\CapsuleComponent.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\System\Object\Component\SphereComponent.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Sources\Shader\GridPS.hlsl">

@@ -7,7 +7,7 @@ void ViewerCamera::Update()
 
 
 
-	l -= static_cast<float>(INPUT->GetMouseWheelDelta() / 1008.0f);
+	l -= static_cast<float>(INPUT->GetMouseWheelDelta() / 1008.0f*6.0f);
 	if (l < 0)
 		l = 0.01f;
 

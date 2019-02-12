@@ -41,6 +41,8 @@ private:
 	//std::unique_ptr<RigidBody_Sphere>			rigid_sphere;
 	std::unique_ptr<StaticMesh>				yuppi;
 	std::unique_ptr<Pawn>				cube;
+
+	std::vector<std::unique_ptr<Pawn>>	cubes;
 	std::unique_ptr<Ball>				sphere;
 	std::unique_ptr<Yukitter::YQCamera>			catcher_view;
 

@@ -86,17 +86,24 @@ void CollisionBase::Collide(BoxCollision* box1, BoxCollision* box2)
 	extention.emplace_back(box2->box_extention.x);
 	extention.emplace_back(box2->box_extention.y);
 	int loop_count = 0;
+	float penetration = FLT_MAX;
 	for (auto& vec : v)
 	{
 		Vector scale = box1->actor_ref->GetActorTransform().scale3d;
-		Vector l = vec;
-		float ra = CalcSumOfProjectedVec(l, f1*scale.z, r1*scale.x, u1*scale.y);
+		Vector l_vec = vec;
+		float ra = CalcSumOfProjectedVec(l_vec, f1*scale.z, r1*scale.x, u1*scale.y);
 		float rb = extention[loop_count];
-
-		if (ra + rb > Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l)))
+		float l = ra + rb - Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l_vec));
+		if (l < 0)return;
+		else
 		{
-
+			if (penetration > l)
+			{
+				penetration = l;
+			}
 		}
+
+
 		loop_count++;
 	}
 	v.clear();
@@ -111,13 +118,17 @@ void CollisionBase::Collide(BoxCollision* box1, BoxCollision* box2)
 	for (auto& vec : v)
 	{
 		Vector scale = box2->actor_ref->GetActorTransform().scale3d;
-		Vector l = vec;
-		float ra = CalcSumOfProjectedVec(l, f2*scale.z, r2*scale.x, u2*scale.y);
+		Vector l_vec = vec;
+		float ra = CalcSumOfProjectedVec(l_vec, f2*scale.z, r2*scale.x, u2*scale.y);
 		float rb = extention[loop_count];
-
-		if (ra + rb > Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l)))
+		float l = ra + rb - Absolute(Dot(box1->actor_ref->GetActorLocation() - box2->actor_ref->GetActorLocation(), l_vec));
+		if (l < 0)return;
+		else
 		{
-
+			if (penetration > l)
+			{
+				penetration = l;
+			}
 		}
 		loop_count++;
 	}
@@ -179,6 +190,50 @@ bool Contact::Resolve()
 
 
 	Vector impulse = normal * j;
+
+
+	//TODO::ぼくくん渾身の計算(頼りない)
+	//接触点での速度ベクトル（向き：接触法線と回転軸の外積方向）vrを求める
+	//ベクトルvr方向の接触点での速度を求める　vr
+
+	Vector vr = Cross(normal, objects[0]->rigid_ref->angular_velocity.GetNormalize()).GetNormalize();
+
+	float magnitude = 1.0f-Absolute(Dot(normal, objects[0]->rigid_ref->angular_velocity.GetNormalize()));
+
+	{
+		Vector point_a = objects[0]->rigid_ref->actor_ref->GetActorLocation();
+		Vector point_b = objects[0]->rigid_ref->actor_ref->GetActorLocation()+ objects[0]->rigid_ref->angular_velocity.GetNormalize()*3.0f;
+		Vector a_b = point_b - point_a;
+		float h = Cross(a_b, impact_location - objects[0]->rigid_ref->actor_ref->GetActorLocation()).Length()/ a_b.Length();
+		vr = vr * h*objects[0]->rigid_ref->angular_velocity.Length();
+	}
+
+	//接触点で生じる力は速度velocityの衝突法線平面成分とvrの和		force_on_hit
+
+	Vector force_on_hit = GetProjectedVectorToPlane(objects[0]->rigid_ref->linear_velocity,normal) + vr;
+	//摩擦力ベクトルは速度velocityとvrの和 * -1	force_of_friction
+	//Vector force_of_friction= force_on_hit.GetNormalize()
+	float friction = 12.8f;
+	float force_magnitude_of_friction = Clamp(j*friction, 0, j*friction);
+	//auto str0 = L"\nnormal:: x:" + std::to_wstring(normal.x) + L" y:" + std::to_wstring(normal.y) + L" z:" + std::to_wstring(normal.z) + L"\n";
+	std::wstring w2 = std::to_wstring(force_magnitude_of_friction) + L"\n";
+	OutputDebugStringW(w2.c_str());
+	//摩擦力ベクトルの大きさは 0<f<μW
+
+	//加速度//////////////////////
+	//ma=μW
+	//a=μW*Inv(m)
+	Vector force_of_friction = force_on_hit.GetNormalize()*-1 * force_magnitude_of_friction;
+	objects[0]->rigid_ref->AddForce(force_of_friction);
+	////////////////////////////////
+
+	//角加速度////////////////////////
+	//Ia==RF
+	auto dbg = Cross(normal,force_of_friction.GetNormalize() )*force_of_friction.Length() * objects[0]->rigid_ref->actor_ref->GetActorScale().x*-1;
+	objects[0]->rigid_ref->AddTorque(dbg);
+	//a=RF*Inv(I)
+	////////////////////////////////////
+
 
 	//impulse+=Cross()
 
